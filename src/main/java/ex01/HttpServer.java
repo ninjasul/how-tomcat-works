@@ -30,45 +30,38 @@ public class HttpServer {
     }
 
     public void await() {
-        ServerSocket serverSocket = null;
+        //ServerSocket serverSocket = null;
         int port = 8080;
 
-        try {
-            serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"));
+        // ServerSocket은 Socket과 달리 클라이언트 요청을 기다리는 역할을 함.
+        // 클라이언트 요청이 들어오면 ServerSocket은 Socket을 생성하여 해당 요청을 처리하게 함.
+        try (ServerSocket serverSocket = new ServerSocket(port, 1, InetAddress.getByName("127.0.0.1"))) {
+
+            // Loop waiting for a request
+            while (!shutdown) {
+                try(Socket socket = serverSocket.accept();
+                    InputStream input = socket.getInputStream();
+                    OutputStream output = socket.getOutputStream()) {
+                    // create Request object and parse
+                    Request request = new Request(input);
+                    request.parse();
+
+                    // create Response object
+                    Response response = new Response(output);
+                    response.setRequest(request);
+                    response.sendStaticResource();
+
+                    //check if the previous URI is a shutdown command
+                    shutdown = SHUTDOWN_COMMAND.equalsIgnoreCase(request.getUri());
+                } catch (Exception e) {
+                    e.printStackTrace ();
+                    continue;
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
-        }
-
-        // Loop waiting for a request
-        while (!shutdown) {
-            Socket socket;
-            InputStream input;
-            OutputStream output;
-
-            try {
-                socket = serverSocket.accept();
-                input = socket.getInputStream();
-                output = socket.getOutputStream();
-
-                // create Request object and parse
-                Request request = new Request(input);
-                request.parse();
-
-                // create Response object
-                Response response = new Response(output);
-                response.setRequest(request);
-                response.sendStaticResource();
-
-                // Close the socket
-                socket.close();
-
-                //check if the previous URI is a shutdown command
-                shutdown = request.getUri().equals(SHUTDOWN_COMMAND);
-            } catch (Exception e) {
-                e.printStackTrace ();
-                continue;
-            }
         }
     }
 }
