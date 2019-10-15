@@ -29,7 +29,7 @@ public class HttpServer {
         server.await();
     }
 
-    public void await() {
+    private void await() {
         //ServerSocket serverSocket = null;
         int port = 8080;
 
@@ -55,7 +55,6 @@ public class HttpServer {
                     shutdown = SHUTDOWN_COMMAND.equalsIgnoreCase(request.getUri());
                 } catch (Exception e) {
                     e.printStackTrace ();
-                    continue;
                 }
             }
 
