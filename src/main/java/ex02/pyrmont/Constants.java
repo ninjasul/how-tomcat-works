@@ -1,4 +1,4 @@
-package ex02;
+package ex02.pyrmont;
 
 import java.io.File;
 
@@ -7,4 +7,7 @@ public class Constants {
             System.getProperty("user.dir") + File.separator + "webroot";
 
     public static final String SERVLET = "/servlet/";
+
+    // shutdown command
+    public static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
 }

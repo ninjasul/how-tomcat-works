@@ -1,4 +1,4 @@
-package ex01;
+package ex01.pyrmont;
 
 import java.io.File;
 import java.io.FileInputStream;

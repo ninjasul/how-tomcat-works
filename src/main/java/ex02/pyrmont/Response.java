@@ -1,7 +1,4 @@
-package ex02;
-
-import ex02.Constants;
-import ex02.Request;
+package ex02.pyrmont;
 
 import java.io.OutputStream;
 import java.io.IOException;
@@ -36,13 +33,14 @@ public class Response implements ServletResponse {
             /* request.getUri has been replaced by request.getRequestURI */
             File file = new File(Constants.WEB_ROOT, request.getUri());
             fis = new FileInputStream(file);
-      /*
-         HTTP Response = Status-Line
-           *(( general-header | response-header | entity-header ) CRLF)
-           CRLF
-           [ message-body ]
-         Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
-      */
+
+            /**
+             HTTP Response = Status-Line
+               *(( general-header | response-header | entity-header ) CRLF)
+               CRLF
+               [ message-body ]
+             Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+            */
             int ch = fis.read(bytes, 0, BUFFER_SIZE);
             while (ch!=-1) {
                 output.write(bytes, 0, ch);
@@ -89,8 +87,7 @@ public class Response implements ServletResponse {
     }
 
     public PrintWriter getWriter() throws IOException {
-        // autoflush is true, println() will flush,
-        // but print() will not.
+        // if autoFlush is true, println() will flush, but print() will not.
         writer = new PrintWriter(output, true);
         return writer;
     }

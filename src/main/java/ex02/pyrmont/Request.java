@@ -1,4 +1,6 @@
-package ex02;
+package ex02.pyrmont;
+
+import lombok.Getter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletInputStream;
@@ -12,14 +14,12 @@ import java.util.Map;
 
 public class Request implements ServletRequest {
     private InputStream input;
+
+    @Getter
     private String uri;
 
     public Request(InputStream input) {
         this.input = input;
-    }
-
-    public String getUri() {
-        return uri;
     }
 
     private String parseUri(String requestString) {

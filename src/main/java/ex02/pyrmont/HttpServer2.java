@@ -1,29 +1,22 @@
-package ex02;
+package ex02.pyrmont;
 
-import java.io.IOException;
+import java.net.Socket;
+import java.net.ServerSocket;
+import java.net.InetAddress;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.IOException;
 
-import static ex02.Constants.SERVLET;
+import static ex02.pyrmont.Constants.SERVLET;
+import static ex02.pyrmont.Constants.SHUTDOWN_COMMAND;
 
-public class HttpServer1 {
-
-    /**
-     * WEB_ROOT is the directory where our HTML and other files reside.
-     * For this package, WEB_ROOT is the "webroot" directory under the * working directory.
-     * The working directory is the location in the file system * from where the java command was invoked.
-     */
-// shutdown command
-    private static final String SHUTDOWN_COMMAND = "/SHUTDOWN";
+public class HttpServer2 {
 
     // the shutdown command received
     private boolean shutdown = false;
 
     public static void main(String[] args) {
-        HttpServer1 server = new HttpServer1();
+        HttpServer2 server = new HttpServer2();
         server.await();
     }
 
@@ -42,11 +35,12 @@ public class HttpServer1 {
             Socket socket = null;
             InputStream input = null;
             OutputStream output = null;
-
             try {
                 socket = serverSocket.accept();
                 input = socket.getInputStream();
-                output = socket.getOutputStream(); // create Request object and parse
+                output = socket.getOutputStream();
+
+                // create Request object and parse
                 Request request = new Request(input);
                 request.parse();
 
@@ -57,7 +51,7 @@ public class HttpServer1 {
                 // check if this is a request for a servlet or a static resource
                 // a request for a servlet begins with "/servlet/"
                 if (request.getUri().startsWith(SERVLET)) {
-                    ServletProcessor1 processor = new ServletProcessor1();
+                    ServletProcessor2 processor = new ServletProcessor2();
                     processor.process(request, response);
                 } else {
                     StaticResourceProcessor processor = new StaticResourceProcessor();
@@ -66,7 +60,6 @@ public class HttpServer1 {
 
                 // Close the socket
                 socket.close();
-
                 // check if the previous URI is a shutdown command
                 shutdown = request.getUri().equals(SHUTDOWN_COMMAND);
             } catch (Exception e) {
