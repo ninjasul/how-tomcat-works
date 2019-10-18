@@ -42,8 +42,7 @@ import org.apache.catalina.util.StringParser;
  * @deprecated
  */
 
-final class HttpProcessor
-    implements Lifecycle, Runnable {
+final class HttpProcessor implements Lifecycle, Runnable {
 
 
     // ----------------------------------------------------- Manifest Constants
@@ -52,8 +51,7 @@ final class HttpProcessor
     /**
      * Server information string for this server.
      */
-    private static final String SERVER_INFO =
-        ServerInfo.getServerInfo() + " (HTTP/1.1 Connector)";
+    private static final String SERVER_INFO = ServerInfo.getServerInfo() + " (HTTP/1.1 Connector)";
 
 
     // ----------------------------------------------------------- Constructors
@@ -100,7 +98,7 @@ final class HttpProcessor
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug = 2;
 
 
     /**
@@ -486,19 +484,18 @@ final class HttpProcessor
      * @exception java.io.IOException if an input/output error occurs
      * @exception javax.servlet.ServletException if a parsing error occurs
      */
-    private void parseConnection(Socket socket)
-        throws IOException, ServletException {
-
+    private void parseConnection(Socket socket) throws IOException, ServletException {
         if (debug >= 2)
-            log("  parseConnection: address=" + socket.getInetAddress() +
-                ", port=" + connector.getPort());
+            log("  parseConnection: address=" + socket.getInetAddress() +", port=" + connector.getPort());
+
         ((HttpRequestImpl) request).setInet(socket.getInetAddress());
+
         if (proxyPort != 0)
             request.setServerPort(proxyPort);
         else
             request.setServerPort(serverPort);
-        request.setSocket(socket);
 
+        request.setSocket(socket);
     }
 
 
@@ -523,10 +520,9 @@ final class HttpProcessor
             if (header.nameEnd == 0) {
                 if (header.valueEnd == 0) {
                     return;
-                } else {
-                    throw new ServletException
-                        (sm.getString("httpProcessor.parseHeaders.colon"));
                 }
+
+                throw new ServletException(sm.getString("httpProcessor.parseHeaders.colon"));
             }
 
             String value = new String(header.value, 0, header.valueEnd);
@@ -861,8 +857,7 @@ final class HttpProcessor
      *
      * @param output Socket output stream
      */
-    private void ackRequest(OutputStream output)
-        throws IOException {
+    private void ackRequest(OutputStream output) throws IOException {
         if (sendAck)
             output.write(ack);
     }
@@ -883,8 +878,7 @@ final class HttpProcessor
 
         // Construct and initialize the objects we will need
         try {
-            input = new SocketInputStream(socket.getInputStream(),
-                                          connector.getBufferSize());
+            input = new SocketInputStream(socket.getInputStream(), connector.getBufferSize());
         } catch (Exception e) {
             log("process.create", e);
             ok = false;
@@ -902,23 +896,22 @@ final class HttpProcessor
                 output = socket.getOutputStream();
                 response.setStream(output);
                 response.setRequest(request);
-                ((HttpServletResponse) response.getResponse()).setHeader
-                    ("Server", SERVER_INFO);
+                ((HttpServletResponse) response.getResponse()).setHeader("Server", SERVER_INFO);
             } catch (Exception e) {
                 log("process.create", e);
                 ok = false;
             }
 
-
             // Parse the incoming request
             try {
                 if (ok) {
-
                     parseConnection(socket);
                     parseRequest(input, output);
-                    if (!request.getRequest().getProtocol()
-                        .startsWith("HTTP/0"))
+
+                    if (!request.getRequest().getProtocol().startsWith("HTTP/0")) {
                         parseHeaders(input);
+                    }
+
                     if (http11) {
                         // Sending a request acknowledge back to the client if
                         // requested.
@@ -937,8 +930,7 @@ final class HttpProcessor
             } catch (ServletException e) {
                 ok = false;
                 try {
-                    ((HttpServletResponse) response.getResponse())
-                        .sendError(HttpServletResponse.SC_BAD_REQUEST);
+                    ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_BAD_REQUEST);
                 } catch (Exception f) {
                     ;
                 }
@@ -946,8 +938,7 @@ final class HttpProcessor
                 if (debug > 1) {
                     try {
                         log("process.parse", e);
-                        ((HttpServletResponse) response.getResponse())
-                            .sendError(HttpServletResponse.SC_BAD_REQUEST);
+                        ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_BAD_REQUEST);
                     } catch (Exception f) {
                         ;
                     }
@@ -956,8 +947,7 @@ final class HttpProcessor
             } catch (Exception e) {
                 try {
                     log("process.parse", e);
-                    ((HttpServletResponse) response.getResponse()).sendError
-                        (HttpServletResponse.SC_BAD_REQUEST);
+                    ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_BAD_REQUEST);
                 } catch (Exception f) {
                     ;
                 }
@@ -966,16 +956,15 @@ final class HttpProcessor
 
             // Ask our Container to process this request
             try {
-                ((HttpServletResponse) response).setHeader
-                    ("Date", FastHttpDateFormat.getCurrentDate());
+                ((HttpServletResponse) response).setHeader("Date", FastHttpDateFormat.getCurrentDate());
+
                 if (ok) {
                     connector.getContainer().invoke(request, response);
                 }
             } catch (ServletException e) {
                 log("process.invoke", e);
                 try {
-                    ((HttpServletResponse) response.getResponse()).sendError
-                        (HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 } catch (Exception f) {
                     ;
                 }
@@ -985,8 +974,7 @@ final class HttpProcessor
             } catch (Throwable e) {
                 log("process.invoke", e);
                 try {
-                    ((HttpServletResponse) response.getResponse()).sendError
-                        (HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 } catch (Exception f) {
                     ;
                 }
@@ -1032,7 +1020,6 @@ final class HttpProcessor
             // Recycling the request and the response objects
             request.recycle();
             response.recycle();
-
         }
 
         try {
@@ -1044,9 +1031,6 @@ final class HttpProcessor
             log("process.invoke", e);
         }
         socket = null;
-
-
-
     }
 
 
@@ -1113,7 +1097,6 @@ final class HttpProcessor
 
         if (debug >= 1)
             log(" Background thread has been started");
-
     }
 
 
@@ -1188,13 +1171,12 @@ final class HttpProcessor
     public void start() throws LifecycleException {
 
         if (started)
-            throw new LifecycleException
-                (sm.getString("httpProcessor.alreadyStarted"));
+            throw new LifecycleException(sm.getString("httpProcessor.alreadyStarted"));
+
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
         threadStart();
-
     }
 
 
@@ -1206,13 +1188,12 @@ final class HttpProcessor
     public void stop() throws LifecycleException {
 
         if (!started)
-            throw new LifecycleException
-                (sm.getString("httpProcessor.notStarted"));
+            throw new LifecycleException(sm.getString("httpProcessor.notStarted"));
+
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
 
         threadStop();
-
     }
 
 

@@ -1,32 +1,21 @@
 package org.apache.catalina.connector.http;
 
 
+import org.apache.catalina.*;
+import org.apache.catalina.net.DefaultServerSocketFactory;
+import org.apache.catalina.net.ServerSocketFactory;
+import org.apache.catalina.util.LifecycleSupport;
+import org.apache.catalina.util.StringManager;
+
 import java.io.IOException;
 import java.net.BindException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.security.AccessControlException;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.util.Stack;
 import java.util.Vector;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.UnrecoverableKeyException;
-import java.security.KeyManagementException;
-import org.apache.catalina.Connector;
-import org.apache.catalina.Container;
-import org.apache.catalina.Lifecycle;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.LifecycleListener;
-import org.apache.catalina.Logger;
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
-import org.apache.catalina.Service;
-import org.apache.catalina.net.DefaultServerSocketFactory;
-import org.apache.catalina.net.ServerSocketFactory;
-import org.apache.catalina.util.LifecycleSupport;
-import org.apache.catalina.util.StringManager;
 
 
 /**
@@ -39,9 +28,7 @@ import org.apache.catalina.util.StringManager;
  */
 
 
-public final class HttpConnector
-    implements Connector, Lifecycle, Runnable {
-
+public final class HttpConnector implements Connector, Lifecycle, Runnable {
 
     // ----------------------------------------------------- Instance Variables
 
@@ -892,12 +879,13 @@ public final class HttpConnector
      * @exception java.security.KeyManagementException     problem in the key management
      *                                       layer (SSL only)
      */
-    private ServerSocket open()
-    throws IOException, KeyStoreException, NoSuchAlgorithmException,
-           CertificateException, UnrecoverableKeyException,
-           KeyManagementException
+    private ServerSocket open() throws IOException,
+                                        KeyStoreException,
+                                        NoSuchAlgorithmException,
+                                        CertificateException,
+                                        UnrecoverableKeyException,
+                                        KeyManagementException
     {
-
         // Acquire the server socket factory for this Connector
         ServerSocketFactory factory = getFactory();
 
@@ -918,8 +906,7 @@ public final class HttpConnector
             try {
                 return (factory.createSocket(port, acceptCount, is));
             } catch (BindException be) {
-                throw new BindException(be.getMessage() + ":" + address +
-                                        ":" + port);
+                throw new BindException(be.getMessage() + ":" + address + ":" + port);
             }
         } catch (Exception e) {
             log(sm.getString("httpConnector.noAddress", address));
@@ -953,7 +940,9 @@ public final class HttpConnector
                 //                    log("run: Returned from serverSocket.accept()");
                 if (connectionTimeout > 0)
                     socket.setSoTimeout(connectionTimeout);
+
                 socket.setTcpNoDelay(tcpNoDelay);
+
             } catch (AccessControlException ace) {
                 log("socket accept security exception", ace);
                 continue;
@@ -1038,7 +1027,6 @@ public final class HttpConnector
         thread = new Thread(this, threadName);
         thread.setDaemon(true);
         thread.start();
-
     }
 
 
@@ -1101,11 +1089,9 @@ public final class HttpConnector
     /**
      * Initialize this connector (create ServerSocket here!)
      */
-    public void initialize()
-    throws LifecycleException {
+    public void initialize() throws LifecycleException {
         if (initialized)
-            throw new LifecycleException (
-                sm.getString("httpConnector.alreadyInitialized"));
+            throw new LifecycleException (sm.getString("httpConnector.alreadyInitialized"));
 
         this.initialized=true;
         Exception eRethrow = null;
@@ -1135,9 +1121,7 @@ public final class HttpConnector
 
         if ( eRethrow != null )
             throw new LifecycleException(threadName + ".open", eRethrow);
-
     }
-
 
     /**
      * Begin processing requests via this Connector.
@@ -1148,8 +1132,8 @@ public final class HttpConnector
 
         // Validate and update our current state
         if (started)
-            throw new LifecycleException
-                (sm.getString("httpConnector.alreadyStarted"));
+            throw new LifecycleException(sm.getString("httpConnector.alreadyStarted"));
+
         threadName = "HttpConnector[" + port + "]";
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
@@ -1159,8 +1143,10 @@ public final class HttpConnector
 
         // Create the specified minimum number of processors
         while (curProcessors < minProcessors) {
+
             if ((maxProcessors > 0) && (curProcessors >= maxProcessors))
                 break;
+
             HttpProcessor processor = newProcessor();
             recycle(processor);
         }

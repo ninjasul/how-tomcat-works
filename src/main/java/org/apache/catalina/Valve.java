@@ -149,8 +149,7 @@ public interface Valve {
      * @exception javax.servlet.ServletException if a servlet error occurs, or is thrown
      *  by a subsequently invoked Valve, Filter, or Servlet
      */
-    public void invoke(Request request, Response response,
-                       ValveContext context)
+    public void invoke(Request request, Response response, ValveContext context)
         throws IOException, ServletException;
 
 

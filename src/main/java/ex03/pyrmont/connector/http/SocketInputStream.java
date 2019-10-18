@@ -122,6 +122,7 @@ public class SocketInputStream extends InputStream {
 				chr = -1;
 			}
 		} while ((chr == CR) || (chr == LF));
+
 		if (chr == -1)
 			throw new EOFException(sm.getString("requestStream.readline.error"));
 		pos--;

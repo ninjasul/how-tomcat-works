@@ -556,6 +556,7 @@ public class HttpRequestBase
         ParameterMap results = parameters;
         if (results == null)
             results = new ParameterMap();
+
         results.setLocked(false);
 
         String encoding = getCharacterEncoding();

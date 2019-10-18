@@ -164,6 +164,8 @@ public class HttpRequest implements HttpServletRequest {
 		} else {
 			contentType = contentType.trim();
 		}
+
+
 		if ("POST".equals(getMethod()) && (getContentLength() > 0)
 				&& "application/x-www-form-urlencoded".equals(contentType)) {
 			try {

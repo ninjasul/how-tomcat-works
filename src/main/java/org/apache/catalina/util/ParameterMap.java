@@ -91,9 +91,7 @@ public final class ParameterMap extends HashMap {
      * load factor.
      */
     public ParameterMap() {
-
         super();
-
     }
 
 
@@ -104,9 +102,7 @@ public final class ParameterMap extends HashMap {
      * @param initialCapacity The initial capacity of this map
      */
     public ParameterMap(int initialCapacity) {
-
         super(initialCapacity);
-
     }
 
 
@@ -118,9 +114,7 @@ public final class ParameterMap extends HashMap {
      * @param loadFactor The load factor of this map
      */
     public ParameterMap(int initialCapacity, float loadFactor) {
-
         super(initialCapacity, loadFactor);
-
     }
 
 
