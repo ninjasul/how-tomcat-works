@@ -30,8 +30,10 @@ public class HeaderLoggerValve implements Valve, Contained {
                 System.out.println(headerName + ":" + headerValue);
             }
 
-        } else
+        }
+        else {
             System.out.println("Not an HTTP Request");
+        }
 
         System.out.println("------------------------------------");
     }

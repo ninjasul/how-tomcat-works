@@ -46,17 +46,19 @@ public class SimpleContextMapper implements Mapper {
    */
   public Container map(Request request, boolean update) {
     // Identify the context-relative URI to be mapped
-    String contextPath =
-      ((HttpServletRequest) request.getRequest()).getContextPath();
+    String contextPath = ((HttpServletRequest) request.getRequest()).getContextPath();
     String requestURI = ((HttpRequest) request).getDecodedRequestURI();
     String relativeURI = requestURI.substring(contextPath.length());
+
     // Apply the standard request URI mapping rules from the specification
     Wrapper wrapper = null;
     String servletPath = relativeURI;
     String pathInfo = null;
     String name = context.findServletMapping(relativeURI);
+
     if (name != null)
       wrapper = (Wrapper) context.findChild(name);
+
     return (wrapper);
   }
 }

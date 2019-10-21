@@ -16,7 +16,7 @@ public class SimpleContextValve implements Valve, Contained {
             throws IOException, ServletException {
         // Validate the request and response object types
         if (!(request.getRequest() instanceof HttpServletRequest) ||
-            !(response.getResponse() instanceof HttpServletResponse)) {
+                !(response.getResponse() instanceof HttpServletResponse)) {
             return;     // NOTE - Not much else we can do generically
         }
 
@@ -36,10 +36,12 @@ public class SimpleContextValve implements Valve, Contained {
             badRequest(requestURI, (HttpServletResponse) response.getResponse());
             return;
         }
+
         if (wrapper == null) {
             notFound(requestURI, (HttpServletResponse) response.getResponse());
             return;
         }
+
         // Ask this Wrapper to process this Request
         response.setContext(context);
         wrapper.invoke(request, response);
