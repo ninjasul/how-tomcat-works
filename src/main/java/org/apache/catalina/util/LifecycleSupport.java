@@ -123,16 +123,15 @@ public final class LifecycleSupport {
      * @param listener The listener to add
      */
     public void addLifecycleListener(LifecycleListener listener) {
-
       synchronized (listeners) {
-          LifecycleListener results[] =
-            new LifecycleListener[listeners.length + 1];
+          LifecycleListener results[] = new LifecycleListener[listeners.length + 1];
+
           for (int i = 0; i < listeners.length; i++)
               results[i] = listeners[i];
+
           results[listeners.length] = listener;
           listeners = results;
       }
-
     }
 
 
