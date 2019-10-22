@@ -294,7 +294,6 @@ public class FileLogger
                 writer.println(msg);
             }
         }
-
     }
 
 
@@ -323,14 +322,15 @@ public class FileLogger
 
         // Create the directory if necessary
         File dir = new File(directory);
+
         if (!dir.isAbsolute())
             dir = new File(System.getProperty("catalina.base"), directory);
+
         dir.mkdirs();
 
         // Open the current log file
         try {
-            String pathname = dir.getAbsolutePath() + File.separator +
-                prefix + date + suffix;
+            String pathname = dir.getAbsolutePath() + File.separator + prefix + date + suffix;
             writer = new PrintWriter(new FileWriter(pathname, true), true);
         } catch (IOException e) {
             writer = null;
@@ -386,14 +386,12 @@ public class FileLogger
      *  that prevents this component from being used
      */
     public void start() throws LifecycleException {
-
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                (sm.getString("fileLogger.alreadyStarted"));
+            throw new LifecycleException(sm.getString("fileLogger.alreadyStarted"));
+
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
-
     }
 
 
@@ -409,13 +407,12 @@ public class FileLogger
 
         // Validate and update our current component state
         if (!started)
-            throw new LifecycleException
-                (sm.getString("fileLogger.notStarted"));
+            throw new LifecycleException(sm.getString("fileLogger.notStarted"));
+
         lifecycle.fireLifecycleEvent(STOP_EVENT, null);
         started = false;
 
         close();
-
     }
 
 

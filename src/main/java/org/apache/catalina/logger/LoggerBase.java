@@ -313,10 +313,8 @@ public abstract class LoggerBase
      * @param verbosity Verbosity level of this message
      */
     public void log(String message, int verbosity) {
-
         if (this.verbosity >= verbosity)
             log(message);
-
     }
 
 
