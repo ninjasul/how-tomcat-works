@@ -628,10 +628,11 @@ public class WebappLoader
 
         // Validate and update our current component state
         if (started)
-            throw new LifecycleException
-                (sm.getString("webappLoader.alreadyStarted"));
+            throw new LifecycleException(sm.getString("webappLoader.alreadyStarted"));
+
         if (debug >= 1)
             log(sm.getString("webappLoader.starting"));
+
         lifecycle.fireLifecycleEvent(START_EVENT, null);
         started = true;
 
@@ -639,8 +640,7 @@ public class WebappLoader
             return;
 
         // Register a stream handler factory for the JNDI protocol
-        URLStreamHandlerFactory streamHandlerFactory =
-            new DirContextURLStreamHandlerFactory();
+        URLStreamHandlerFactory streamHandlerFactory = new DirContextURLStreamHandlerFactory();
         try {
             URL.setURLStreamHandlerFactory(streamHandlerFactory);
         } catch (Throwable t) {
@@ -649,7 +649,6 @@ public class WebappLoader
 
         // Construct a class loader based on our current repositories list
         try {
-
             classLoader = createClassLoader();
             classLoader.setResources(container.getResources());
             classLoader.setDebug(this.debug);

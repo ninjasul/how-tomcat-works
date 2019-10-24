@@ -580,8 +580,7 @@ public class StandardContext
         if (this.charsetMapper == null) {
             try {
                 Class clazz = Class.forName(charsetMapperClass);
-                this.charsetMapper =
-                  (CharsetMapper) clazz.newInstance();
+                this.charsetMapper = (CharsetMapper) clazz.newInstance();
             } catch (Throwable t) {
                 this.charsetMapper = new CharsetMapper();
             }

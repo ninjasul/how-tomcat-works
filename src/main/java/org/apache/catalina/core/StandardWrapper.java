@@ -100,9 +100,7 @@ import org.apache.tomcat.util.log.SystemLogHandler;
  * @version $Revision: 1.40 $ $Date: 2002/08/29 10:37:55 $
  */
 
-public final class StandardWrapper
-    extends ContainerBase
-    implements ServletConfig, Wrapper {
+public final class StandardWrapper extends ContainerBase implements ServletConfig, Wrapper {
 
 
     // ----------------------------------------------------------- Constructors

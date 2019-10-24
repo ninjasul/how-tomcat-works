@@ -793,9 +793,8 @@ public class WebappClassLoader
 
         for (int i = 0; i < length; i++) {
             try {
-                long lastModified =
-                    ((ResourceAttributes) resources.getAttributes(paths[i]))
-                    .getLastModified();
+                long lastModified = ((ResourceAttributes) resources.getAttributes(paths[i])).getLastModified();
+
                 if (lastModified != lastModifiedDates[i]) {
                     log("  Resource '" + paths[i]
                         + "' was modified; Date is now: "
